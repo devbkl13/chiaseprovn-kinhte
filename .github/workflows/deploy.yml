@@ -88,7 +88,7 @@ jobs:
           <head>
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Danh sách trang HTML</title>
+              <title>Tổng hợp kinh tế Việt Nam</title>
               <style>
                   body { 
                       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -112,7 +112,7 @@ jobs:
                   }
                   .page-grid {
                       display: grid;
-                      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
                       gap: 20px;
                       margin-bottom: 30px;
                   }
@@ -172,7 +172,7 @@ jobs:
           </head>
           <body>
               <div class="container">
-                  <h1>📰 Danh sách trang HTML</h1>
+                  <h1>📰 Tổng hợp kinh tế Việt Nam</h1>
                   <div class="page-grid">
           EOF
           
@@ -208,7 +208,7 @@ jobs:
           cat >> index.html << EOF
                   </div>
                   <div class="stats">
-                      📊 Tổng cộng: <strong>$file_count</strong> trang HTML • 
+                      📊 Tổng cộng: <strong>$file_count</strong> trang • 
                       🕒 Cập nhật lần cuối: <strong>$(date '+%d/%m/%Y %H:%M:%S') +00:00</strong>
                   </div>
               </div>
