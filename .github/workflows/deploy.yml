@@ -209,7 +209,7 @@ jobs:
                   </div>
                   <div class="stats">
                       📊 Tổng cộng: <strong>$file_count</strong> trang HTML • 
-                      🕒 Cập nhật lần cuối: <strong>$(date '+%d/%m/%Y %H:%M:%S')+0</strong>
+                      🕒 Cập nhật lần cuối: <strong>$(date '+%d/%m/%Y %H:%M:%S') +00:00</strong>
                   </div>
               </div>
           </body>
