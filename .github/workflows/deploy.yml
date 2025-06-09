@@ -196,7 +196,7 @@ jobs:
               echo "                          <div class=\"page-description\">$description</div>" >> index.html
             fi
             
-            echo "                          <div class=\"page-path\">📁 $file_clean</div>" >> index.html
+            echo "                          <div class=\"page-path\">📃 $file_clean</div>" >> index.html
             echo "                      </div>" >> index.html
             
             file_count=$((file_count + 1))
