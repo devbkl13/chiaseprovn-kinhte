@@ -1,0 +1,68 @@
+name: Generate HTML Index
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  generate-index:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Generate index.html
+      run: |
+        cat > index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="vi">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Danh sách trang HTML</title>
+            <style>
+                body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                .page-list { list-style: none; padding: 0; }
+                .page-item { margin: 10px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+                .page-link { text-decoration: none; color: #007bff; font-weight: bold; }
+                .page-link:hover { color: #0056b3; }
+                .timestamp { color: #666; font-size: 0.9em; }
+            </style>
+        </head>
+        <body>
+            <h1>📄 Danh sách trang HTML</h1>
+            <ul class="page-list">
+        EOF
+        
+        # Tìm tất cả file .html (trừ index.html)
+        find . -name "*.html" -not -name "index.html" | sort | while read file; do
+          # Loại bỏ "./" ở đầu
+          file_clean=${file#./}
+          # Lấy tên file không có extension
+          name=$(basename "$file" .html)
+          # Thêm vào index
+          echo "                <li class=\"page-item\">" >> index.html
+          echo "                    <a href=\"$file_clean\" class=\"page-link\">$name</a>" >> index.html
+          echo "                    <div class=\"timestamp\">File: $file_clean</div>" >> index.html
+          echo "                </li>" >> index.html
+        done
+        
+        cat >> index.html << 'EOF'
+            </ul>
+            <div style="margin-top: 30px; text-align: center; color: #666; font-style: italic;">
+                Cập nhật tự động: $(date '+%d/%m/%Y %H:%M:%S')
+            </div>
+        </body>
+        </html>
+        EOF
+        
+        # Thay thế placeholder với thời gian thực
+        sed -i "s/\$(date[^)]*)/$(date '+%d\/%m\/%Y %H:%M:%S')/g" index.html
+    
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add index.html
+        git diff --staged --quiet || git commit -m "Auto-update index.html"
+        git push
