@@ -1,68 +1,224 @@
-name: Generate HTML Index
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  generate-index:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Generate index.html
-      run: |
-        cat > index.html << 'EOF'
-        <!DOCTYPE html>
-        <html lang="vi">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Danh sách trang HTML</title>
-            <style>
-                body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-                .page-list { list-style: none; padding: 0; }
-                .page-item { margin: 10px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
-                .page-link { text-decoration: none; color: #007bff; font-weight: bold; }
-                .page-link:hover { color: #0056b3; }
-                .timestamp { color: #666; font-size: 0.9em; }
-            </style>
-        </head>
-        <body>
-            <h1>📄 Danh sách trang HTML</h1>
-            <ul class="page-list">
-        EOF
-        
-        # Tìm tất cả file .html (trừ index.html)
-        find . -name "*.html" -not -name "index.html" | sort | while read file; do
-          # Loại bỏ "./" ở đầu
-          file_clean=${file#./}
-          # Lấy tên file không có extension
-          name=$(basename "$file" .html)
-          # Thêm vào index
-          echo "                <li class=\"page-item\">" >> index.html
-          echo "                    <a href=\"$file_clean\" class=\"page-link\">$name</a>" >> index.html
-          echo "                    <div class=\"timestamp\">File: $file_clean</div>" >> index.html
-          echo "                </li>" >> index.html
-        done
-        
-        cat >> index.html << 'EOF'
-            </ul>
-            <div style="margin-top: 30px; text-align: center; color: #666; font-style: italic;">
-                Cập nhật tự động: $(date '+%d/%m/%Y %H:%M:%S')
-            </div>
-        </body>
-        </html>
-        EOF
-        
-        # Thay thế placeholder với thời gian thực
-        sed -i "s/\$(date[^)]*)/$(date '+%d\/%m\/%Y %H:%M:%S')/g" index.html
-    
-    - name: Commit changes
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add index.html
-        git diff --staged --quiet || git commit -m "Auto-update index.html"
-        git push
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Generate index.html
+        run: |
+          # Function to extract title from HTML file
+          extract_title() {
+            local file="$1"
+            if [ -f "$file" ]; then
+              # Try to extract title tag content
+              title=$(grep -i '<title>' "$file" | head -1 | sed 's/.*<title[^>]*>//I' | sed 's/<\/title>.*//' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
+              
+              # If no title found, try meta title
+              if [ -z "$title" ]; then
+                title=$(grep -i 'property="og:title"' "$file" | head -1 | sed 's/.*content="//I' | sed 's/".*//')
+              fi
+              
+              # If still no title, try h1 tag
+              if [ -z "$title" ]; then
+                title=$(grep -i '<h1>' "$file" | head -1 | sed 's/.*<h1[^>]*>//I' | sed 's/<\/h1>.*//' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//')
+              fi
+              
+              # If still no title, use filename
+              if [ -z "$title" ]; then
+                title=$(basename "$file" .html)
+              fi
+              
+              # Clean up title (remove HTML entities and extra spaces)
+              title=$(echo "$title" | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g' | sed 's/&quot;/"/g' | sed "s/&apos;/'/g" | sed 's/[[:space:]]\+/ /g')
+              
+              echo "$title"
+            else
+              echo "Untitled"
+            fi
+          }
+          
+          # Function to extract description from HTML file
+          extract_description() {
+            local file="$1"
+            if [ -f "$file" ]; then
+              # Try to extract meta description
+              desc=$(grep -i 'name="description"' "$file" | head -1 | sed 's/.*content="//I' | sed 's/".*//' | cut -c1-100)
+              
+              # If no meta description, try og:description
+              if [ -z "$desc" ]; then
+                desc=$(grep -i 'property="og:description"' "$file" | head -1 | sed 's/.*content="//I' | sed 's/".*//' | cut -c1-100)
+              fi
+              
+              # If still no description, try first p tag
+              if [ -z "$desc" ]; then
+                desc=$(grep -i '<p>' "$file" | head -1 | sed 's/.*<p[^>]*>//I' | sed 's/<\/p>.*//' | sed 's/<[^>]*>//g' | cut -c1-100)
+              fi
+              
+              # Clean up description
+              desc=$(echo "$desc" | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g' | sed 's/&quot;/"/g' | sed "s/&apos;/'/g" | sed 's/[[:space:]]\+/ /g')
+              
+              echo "$desc"
+            fi
+          }
+          
+          # Generate HTML header
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="vi">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Danh sách trang HTML</title>
+              <style>
+                  body { 
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                      max-width: 900px; 
+                      margin: 0 auto; 
+                      padding: 20px; 
+                      background: #f8f9fa;
+                      line-height: 1.6;
+                  }
+                  .container {
+                      background: white;
+                      border-radius: 12px;
+                      padding: 30px;
+                      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                  }
+                  h1 { 
+                      text-align: center; 
+                      color: #2c3e50; 
+                      margin-bottom: 30px;
+                      font-size: 2.2em;
+                  }
+                  .page-grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                      gap: 20px;
+                      margin-bottom: 30px;
+                  }
+                  .page-card { 
+                      background: #fff;
+                      border: 1px solid #e9ecef;
+                      border-radius: 8px;
+                      padding: 20px;
+                      transition: all 0.3s ease;
+                      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                  }
+                  .page-card:hover {
+                      transform: translateY(-2px);
+                      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                      border-color: #007bff;
+                  }
+                  .page-title { 
+                      font-size: 1.1em;
+                      font-weight: 600;
+                      margin-bottom: 8px;
+                      color: #2c3e50;
+                  }
+                  .page-link { 
+                      text-decoration: none; 
+                      color: #007bff; 
+                      display: block;
+                  }
+                  .page-link:hover { 
+                      color: #0056b3; 
+                  }
+                  .page-description {
+                      color: #6c757d;
+                      font-size: 0.9em;
+                      margin: 8px 0;
+                      line-height: 1.4;
+                  }
+                  .page-path { 
+                      color: #868e96; 
+                      font-size: 0.8em; 
+                      font-family: monospace;
+                      background: #f8f9fa;
+                      padding: 2px 6px;
+                      border-radius: 3px;
+                      display: inline-block;
+                      margin-top: 8px;
+                  }
+                  .stats {
+                      text-align: center;
+                      margin-top: 30px;
+                      padding: 15px;
+                      background: #f8f9fa;
+                      border-radius: 8px;
+                      color: #6c757d;
+                      font-size: 0.9em;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>📄 Danh sách trang HTML</h1>
+                  <div class="page-grid">
+          EOF
+          
+          # Process each HTML file
+          file_count=0
+          find . -name "*.html" -not -name "index.html" | sort | while read file; do
+            file_clean=${file#./}
+            title=$(extract_title "$file")
+            description=$(extract_description "$file")
+            
+            # Get file size and modification date
+            file_size=$(du -h "$file" 2>/dev/null | cut -f1 || echo "N/A")
+            file_date=$(date -r "$file" "+%d/%m/%Y" 2>/dev/null || echo "N/A")
+            
+            echo "                      <div class=\"page-card\">" >> index.html
+            echo "                          <div class=\"page-title\">" >> index.html
+            echo "                              <a href=\"$file_clean\" class=\"page-link\">$title</a>" >> index.html
+            echo "                          </div>" >> index.html
+            
+            if [ -n "$description" ]; then
+              echo "                          <div class=\"page-description\">$description</div>" >> index.html
+            fi
+            
+            echo "                          <div class=\"page-path\">📁 $file_clean</div>" >> index.html
+            echo "                      </div>" >> index.html
+            
+            file_count=$((file_count + 1))
+          done
+          
+          # Close HTML
+          cat >> index.html << EOF
+                  </div>
+                  <div class="stats">
+                      📊 Tổng cộng: <strong>$file_count</strong> trang HTML • 
+                      🕒 Cập nhật lần cuối: <strong>$(date '+%d/%m/%Y %H:%M:%S')</strong>
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
