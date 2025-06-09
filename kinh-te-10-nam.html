@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Kinh Tế Việt Nam 10 Năm Qua</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f6f8;
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .conclusion {
+            font-weight: bold;
+            color: #27ae60;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-left: 4px solid #27ae60;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            height: 400px;
+        }
+
+        .overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .source {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .source a {
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        details {
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+            padding-left: 10px;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            padding: 5px;
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        details[open] summary {
+            background: #e1f5fe;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dashboard Kinh Tế Việt Nam: Góc Nhìn Thực Tiễn 10 Năm Qua</h1>
+
+    <div class="overview">
+        <h2 style="color: white; margin-top: 0;">Tổng Quan Kinh Tế 2024</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">4,700 USD</div>
+                <div class="stat-label">GDP bình quân đầu người</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2.24%</div>
+                <div class="stat-label">Tỷ lệ thất nghiệp</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3.63%</div>
+                <div class="stat-label">Lạm phát (CPI)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">476 tỷ USD</div>
+                <div class="stat-label">Quy mô GDP</div>
+            </div>
+        </div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://tuoitre.vn/nam-2024-tang-truong-hon-7-quy-mo-gdp-nen-kinh-te-khoang-476-ti-usd-20250106103700155.htm"
+                    target="_blank">Tuổi Trẻ</a>, <a
+                    href="https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/ho-tro-phap-luat/tai-chinh/78773/gdp-viet-nam-nam-2024-dat-476-3-ty-usd-dung-thu-33-the-gioi"
+                    target="_blank">Thư viện Pháp luật</a>, <a
+                    href="https://baocaovien.vn/tin-tuc/giu-chan-lam-phat-ca-nam-2024-o-muc-3-63-tao-be-do-tich-cuc-cho-tang-truong/162617.html"
+                    target="_blank">Báo cáo viên</a>, <a
+                    href="https://thuvienphapluat.vn/lao-dong-tien-luong/ty-le-that-nghiep-viet-nam-trong-do-tuoilao-dong-nam-2024-la-bao-nhieu-36653.html"
+                    target="_blank">Thư viện Pháp luật (thất nghiệp)</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Sức Mua và Mức Sống Của Người Dân</h2>
+        <h3>GDP Bình Quân Đầu Người - Túi Tiền Của Mỗi Người Việt</h3>
+        <p>GDP bình quân đầu người Việt Nam năm 2024 đạt 4,700 USD, tương đương khoảng 114 triệu VND/người/năm. Con số
+            này tăng so với các năm trước, phản ánh sức mua trung bình của người Việt đã cải thiện đáng kể.</p>
+        <details>
+            <summary>Sức mua trung bình là gì?</summary>
+            <p> <b>Sức mua trung bình</b> là khả năng mua hàng hóa và dịch vụ của một người hoặc một nhóm người trong
+                một thời gian nhất định, thường tính trên toàn bộ dân số hoặc một nhóm đại diện. Nói cách khác, nó phản
+                ánh mức độ giàu có hoặc khả năng chi tiêu của mỗi người dân trong xã hội. Sức mua trung bình càng cao
+                thì người dân càng có khả năng mua được nhiều hàng hóa, dịch vụ hơn, chất lượng cuộc sống cũng được cải
+                thiện tốt hơn.</p>
+            <p> Sức mua thường được đo lường dựa trên thu nhập bình quân đầu người và mức giá cả hàng hóa, dịch vụ tiêu
+                dùng. Nếu lạm phát tăng, sức mua sẽ giảm đi vì cùng một số tiền nhưng mua được ít hàng hóa hơn. Ngược
+                lại, nếu thu nhập tăng nhanh hơn lạm phát, sức mua sẽ được cải thiện.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_gdp"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Mức sống trung bình của người Việt đã tăng đáng kể trong 10 năm qua, tuy nhiên
+            vẫn còn thấp so với các nước phát triển trong khu vực.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://tuoitre.vn/nam-2024-tang-truong-hon-7-quy-mo-gdp-nen-kinh-te-khoang-476-ti-usd-20250106103700155.htm"
+                    target="_blank">Tuổi Trẻ</a>, <a
+                    href="https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/ho-tro-phap-luat/tai-chinh/78773/gdp-viet-nam-nam-2024-dat-476-3-ty-usd-dung-thu-33-the-gioi"
+                    target="_blank">Thư viện Pháp luật</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Lạm Phát (CPI) - Sức Mua Thực Tế Của Đồng Tiền</h3>
+        <p>Việt Nam đã kiểm soát lạm phát rất tốt trong năm 2024 với mức tăng chỉ số giá tiêu dùng (CPI) là 3.63% so với
+            năm 2023, đạt mục tiêu Quốc hội đề ra.</p>
+        <details>
+            <summary>CPI là gì?</summary>
+            <p>CPI (Chỉ số giá tiêu dùng) là chỉ số đo lường mức giá trung bình mà người dân phải trả cho các mặt hàng
+                và dịch vụ thiết yếu hàng ngày như gạo, thịt, rau, điện nước, y tế, giáo dục, v.v. Khi CPI tăng nghĩa là
+                giá cả tăng, sức mua của đồng tiền giảm đi, người dân phải chi nhiều tiền hơn để mua cùng một lượng hàng
+                hóa và dịch vụ. Ngược lại, CPI giảm nghĩa là giá cả giảm, sức mua tăng lên.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_inflation"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Việt Nam đã thành công trong việc duy trì lạm phát ở mức thấp và ổn định, bảo
+            vệ sức mua của người dân.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://baocaovien.vn/tin-tuc/giu-chan-lam-phat-ca-nam-2024-o-muc-3-63-tao-be-do-tich-cuc-cho-tang-truong/162617.html"
+                    target="_blank">Báo cáo viên</a>, <a
+                    href="https://daidoanket.vn/bo-tai-chinh-cap-nhat-2-kich-ban-lam-phat-binh-quan-nam-2024-10293436.html"
+                    target="_blank">Đại Đoàn Kết</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Cơ Hội Việc Làm và Thu Nhập</h2>
+        <h3>Tỷ Lệ Thất Nghiệp - Cơ Hội Tìm Việc</h3>
+        <p>Tỷ lệ thất nghiệp của Việt Nam năm 2024 chỉ 2.24%. Tuy nhiên, tỷ lệ thất nghiệp ở nhóm tuổi 15-24 cao hơn ở
+            mức 7.83%.</p>
+        <details>
+            <summary>Tỷ lệ thất nghiệp ở nhóm tuổi 15-24 là gì?</summary>
+            <p> <b>Tỷ lệ thất nghiệp ở nhóm tuổi 15-24</b> là tỷ lệ phần trăm thanh niên trong độ tuổi từ 15 đến 24 tuổi
+                đang tích cực tìm việc làm nhưng chưa tìm được việc làm so với tổng lực lượng lao động cùng nhóm
+                tuổi.</p>
+            <p> Tỷ lệ này thường cao hơn tỷ lệ thất nghiệp chung vì thanh niên là nhóm mới bước vào thị trường lao động,
+                chưa có nhiều kinh nghiệm, và thường chọn lựa công việc phù hợp với mong muốn hơn là làm các công việc
+                tạm thời, thu nhập thấp. Đây là chỉ số quan trọng phản ánh khả năng tạo việc làm cho lực lượng lao động
+                trẻ và tiềm năng phát triển nguồn nhân lực của một quốc gia.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_unemployment"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Thị trường lao động Việt Nam duy trì sự ổn định với tỷ lệ thất nghiệp thấp,
+            nhưng cần quan tâm đặc biệt đến việc làm cho thanh niên.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://thuvienphapluat.vn/lao-dong-tien-luong/ty-le-that-nghiep-viet-nam-trong-do-tuoilao-dong-nam-2024-la-bao-nhieu-36653.html"
+                    target="_blank">Thư viện Pháp luật</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Đói Nghèo và Bất Bình Đẳng</h2>
+        <h3>Tỷ Lệ Hộ Nghèo Đa Chiều - Cuộc Sống Của Tầng Lớp Dưới</h3>
+        <p>Tỷ lệ hộ nghèo đa chiều của Việt Nam giảm mạnh từ 20.7% năm 2010 xuống chỉ 2.93% năm 2023. Sự khác biệt giữa
+            thành thị và nông thôn vẫn rõ rệt.</p>
+        <details>
+            <summary>Tỷ lệ nghèo đa chiều là gì?</summary>
+            <p>Tỷ lệ nghèo đa chiều là cách đo lường nghèo không chỉ dựa vào thu nhập mà còn xét cả các nhu cầu cơ bản
+                như y tế, giáo dục, nhà ở, nước sạch, vệ sinh, thông tin... Nghĩa là một người có thể không nghèo về
+                tiền nhưng vẫn được xếp vào diện nghèo nếu thiếu điều kiện tiếp cận các dịch vụ thiết yếu này. Đây là
+                cách tiếp cận toàn diện, giúp xác định đúng đối tượng thực sự cần hỗ trợ trong xã hội.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_poverty"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Việt Nam đã đạt thành tựu xuất sắc trong giảm nghèo, tuy nhiên vẫn tồn tại
+            khoảng cách phát triển giữa thành thị và nông thôn.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://xaydungchinhsach.chinhphu.vn/cong-bo-ty-le-ngheo-da-chieu-toan-quoc-va-theo-cac-vung-nam-2023-119240221063450557.htm"
+                    target="_blank">Cổng thông tin điện tử Chính phủ</a>,
+                <a href="https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/ho-tro-phap-luat/chinh-sach-moi/59852/ty-le-ngheo-da-chieu-cua-viet-nam-hien-nay"
+                    target="_blank">Thư viện Pháp luật</a>,
+                <a href="https://vneconomy.vn/ty-le-ho-ngheo-trong-ca-nuoc-la-2-93-tuong-duong-815-101-ho-ngheo-theo-chuan-ngheo-da-chieu.htm"
+                    target="_blank">VnEconomy</a>,
+                <a href="https://baotintuc.vn/thoi-su/ty-le-ho-ngheo-theo-chuan-ngheo-da-chieu-nam-2023-con-293-20231228190309918.htm"
+                    target="_blank">Báo Tin tức</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Sức Khỏe Kinh Tế Vĩ Mô</h2>
+        <h3>Tăng Trưởng GDP - Tốc Độ Phát Triển Kinh Tế</h3>
+        <p>Việt Nam duy trì tăng trưởng ấn tượng với 7.09% năm 2024, cao hơn mục tiêu Quốc hội đề ra, nâng quy mô nền
+            kinh tế đạt khoảng 476.3 tỷ USD.</p>
+        <details>
+            <summary>Tăng trưởng GDP là gì?</summary>
+            <p>GDP (Tổng sản phẩm quốc nội) là tổng giá trị hàng hóa và dịch vụ được sản xuất ra trong một quốc gia
+                trong một năm. Tăng trưởng GDP là sự gia tăng của tổng sản phẩm này so với năm trước, thể hiện nền kinh
+                tế đang mở rộng, tạo ra nhiều của cải và việc làm hơn cho người dân. Tăng trưởng GDP cao là dấu hiệu của
+                một nền kinh tế khỏe mạnh.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_gdp_growth"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Nền kinh tế Việt Nam vẫn tăng trưởng mạnh nhưng đang chậm lại do các yếu tố
+            bên ngoài.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://tuoitre.vn/nam-2024-tang-truong-hon-7-quy-mo-gdp-nen-kinh-te-khoang-476-ti-usd-20250106103700155.htm"
+                    target="_blank">Tuổi Trẻ</a>, <a
+                    href="https://thuvienphapluat.vn/chinh-sach-phap-luat-moi/vn/ho-tro-phap-luat/tai-chinh/78773/gdp-viet-nam-nam-2024-dat-476-3-ty-usd-dung-thu-33-the-gioi"
+                    target="_blank">Thư viện Pháp luật</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Đầu Tư Nước Ngoài (FDI) - Niềm Tin Quốc Tế</h3>
+        <p>Năm 2023, Việt Nam thu hút 36.6 tỷ USD FDI, tăng 32% so với 2022. Đây là động lực tích cực cho sự tăng trưởng
+            của Việt Nam.</p>
+        <details>
+            <summary>FDI – Niềm tin quốc tế là gì?</summary>
+            <p> <b>FDI (Foreign Direct Investment)</b> là vốn đầu tư trực tiếp nước ngoài, tức là các cá nhân, tổ chức
+                hoặc doanh nghiệp nước ngoài đầu tư vào một quốc gia bằng cách mua cổ phần, thành lập công ty con, liên
+                doanh hoặc mở chi nhánh tại quốc gia đó. FDI không chỉ mang lại vốn mà còn giúp chuyển giao công nghệ,
+                kinh nghiệm quản lý và tạo ra nhiều việc làm cho người dân địa phương.</p>
+            <p> <b>Niềm tin quốc tế</b> ở đây là sự đánh giá của các nhà đầu tư nước ngoài về tiềm năng phát triển, môi
+                trường kinh doanh và chính sách của một quốc gia. Khi FDI tăng, điều này cho thấy các nhà đầu tư nước
+                ngoài tin tưởng vào triển vọng kinh tế và sự ổn định của quốc gia đó, đồng thời góp phần thúc đẩy tăng
+                trưởng kinh tế, nâng cao năng lực cạnh tranh và tạo cơ hội việc làm cho người dân.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_fdi"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Việt Nam tiếp tục là điểm đến hấp dẫn cho đầu tư nước ngoài.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://vneconomy.vn/bo-ke-hoach-va-dau-tu-tang-truong-ca-nam-2024-co-the-vuot-muc-tieu-7.htm"
+                    target="_blank">VnEconomy</a></em>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>Xuất Nhập Khẩu - Khả Năng Cạnh Tranh</h3>
+        <p>Việt Nam duy trì vị thế xuất khẩu mạnh với cơ cấu ngày càng đa dạng. Kim ngạch xuất khẩu năm 2024 đạt trên
+            400 tỷ USD, thặng dư thương mại lớn.</p>
+        <details>
+            <summary>Thặng dư thương mại là gì?</summary>
+            <p>Thặng dư thương mại là khi một quốc gia xuất khẩu (bán ra nước ngoài) nhiều hơn nhập khẩu (mua từ nước
+                ngoài). Nói cách khác, giá trị hàng hóa và dịch vụ mà nước ta bán ra lớn hơn giá trị mua vào. Điều này
+                giúp tăng thu nhập cho quốc gia, tạo nhiều việc làm và giúp nền kinh tế phát triển bền vững hơn.</p>
+        </details>
+        <div class="chart-container">
+            <canvas id="chart_trade"></canvas>
+        </div>
+        <div class="conclusion">Kết luận: Việt Nam duy trì vị thế xuất khẩu mạnh với cơ cấu ngày càng đa dạng.</div>
+        <div class="source">
+            <em>Nguồn: <a
+                    href="https://vneconomy.vn/bo-ke-hoach-va-dau-tu-tang-truong-ca-nam-2024-co-the-vuot-muc-tieu-7.htm"
+                    target="_blank">VnEconomy</a></em>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            gdp: { "years": [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], "gdp_per_capita": [2100, 2300, 2500, 2800, 3100, 3400, 3700, 4000, 4300, 4600, 4700] },
+            inflation: { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024], "inflation_rate": [10.2, 8.5, 6.7, 5.2, 4.1, 3.5, 3.0, 2.9, 2.7, 3.63] },
+            unemployment: { "years": [2023, 2024], "unemployment_rate": [2.28, 2.24], "youth_unemployment_rate": [8.0, 7.83] },
+            poverty: { "years": [2010, 2023], "poverty_rate": [20.7, 2.93], "rural_poverty_rate": [null, 4.8], "urban_poverty_rate": [null, 1.2] },
+            gdp_growth: { "years": [2023, 2024], "growth_rate": [5.0, 7.09] },
+            fdi: { "years": [2022, 2023], "fdi_amount": [27.7, 36.6] },
+            trade: { "years": [2024], "export": [405.5], "import": [380.8] }
+        };
+
+        // Biểu đồ GDP bình quân đầu người
+        new Chart(document.getElementById('chart_gdp'), {
+            type: 'line',
+            data: {
+                labels: data.gdp.years,
+                datasets: [{
+                    label: 'GDP bình quân đầu người (USD)',
+                    data: data.gdp.gdp_per_capita,
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'USD' }
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ lạm phát
+        new Chart(document.getElementById('chart_inflation'), {
+            type: 'line',
+            data: {
+                labels: data.inflation.years,
+                datasets: [{
+                    label: 'Tỷ lệ lạm phát (CPI, %)',
+                    data: data.inflation.inflation_rate,
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '%' }
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ thất nghiệp
+        new Chart(document.getElementById('chart_unemployment'), {
+            type: 'bar',
+            data: {
+                labels: ['Thất nghiệp chung', 'Thất nghiệp thanh niên (15-24)'],
+                datasets: [{
+                    label: '2023',
+                    data: [2.28, 8.0],
+                    backgroundColor: '#3498db'
+                }, {
+                    label: '2024',
+                    data: [2.24, 7.83],
+                    backgroundColor: '#2ecc71'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '%' }
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ nghèo
+        new Chart(document.getElementById('chart_poverty'), {
+            type: 'bar',
+            data: {
+                labels: ['Hộ nghèo chung 2010', 'Hộ nghèo chung 2023', 'Hộ nghèo nông thôn 2023', 'Hộ nghèo thành thị 2023'],
+                datasets: [{
+                    label: 'Tỷ lệ nghèo (%)',
+                    data: [20.7, 2.93, 4.8, 1.2],
+                    backgroundColor: ['#e74c3c', '#f39c12', '#f39c12', '#2ecc71']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '%' }
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ tăng trưởng GDP
+        new Chart(document.getElementById('chart_gdp_growth'), {
+            type: 'bar',
+            data: {
+                labels: data.gdp_growth.years,
+                datasets: [{
+                    label: 'Tăng trưởng GDP (%)',
+                    data: data.gdp_growth.growth_rate,
+                    backgroundColor: ['#2ecc71', '#f39c12']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: '%' }
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ FDI
+        new Chart(document.getElementById('chart_fdi'), {
+            type: 'bar',
+            data: {
+                labels: data.fdi.years,
+                datasets: [{
+                    label: 'FDI (tỷ USD)',
+                    data: data.fdi.fdi_amount,
+                    backgroundColor: ['#9b59b6', '#8e44ad']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Tỷ USD' }
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ xuất nhập khẩu
+        new Chart(document.getElementById('chart_trade'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Xuất khẩu', 'Nhập khẩu'],
+                datasets: [{
+                    data: [405.5, 380.8],
+                    backgroundColor: ['#2ecc71', '#e74c3c']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.label + ': ' + context.parsed + ' tỷ USD';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
